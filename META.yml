@@ -1,0 +1,20 @@
+---
+name: Module-PluginFinder
+version: 0.01
+author:
+  - 'Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>'
+abstract: |-
+  automatically choose the most appropriate plugin
+  module.
+license: perl
+requires:
+  Module::Pluggable::Object: 0
+build_requires:
+  Test::Exception: 0
+  Test::More: 0
+  Test::Warn: 0
+provides:
+  Module::PluginFinder:
+    file: lib/Module/PluginFinder.pm
+    version: 0.01
+generated_by: Module::Build version 0.26
