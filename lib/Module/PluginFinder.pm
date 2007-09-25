@@ -7,7 +7,7 @@ package Module::PluginFinder;
 
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Carp;
 use Module::Pluggable::Object;
@@ -120,63 +120,28 @@ sub new
       inner       => 0,
    );
 
-   my @modules = $finder->plugins;
-
    my $self = bless {
-      modules => \@modules,
+      finder  => $finder,
+      modules => [],
    }, $class;
 
-   my $filter;
-
    if( exists $args{filter} ) {
-      $filter = delete $args{filter};
+      my $filter = delete $args{filter};
       ref $filter eq "CODE" or croak "Expected that 'filter' argument be a CODE ref";
+
+      $self->{filter} = $filter;
    }
    elsif( exists $args{typevar} ) {
-      my $typevar = delete $args{typevar};
-      my %typemap;
-
-      foreach my $module ( @modules ) {
-         no strict qw( refs );
-
-         next unless defined ${$module."::".$typevar};
-         my $moduletype = ${$module."::".$typevar};
-
-         if( exists $typemap{$moduletype} ) {
-            carp "Already found module '$typemap{$moduletype}' for type '$moduletype'; not adding '$module' as well";
-            next;
-         }
-
-         $typemap{$moduletype} = $module;
-      }
-
-      $self->{typemap} = \%typemap;
+      $self->{typevar} = delete $args{typevar};
    }
    elsif( exists $args{typefunc} ) {
-      my $typefunc = delete $args{typefunc};
-      my %typemap;
-
-      foreach my $module ( @modules ) {
-         no strict qw( refs );
-
-         next unless $module->can( $typefunc );
-         my $moduletype = $module->$typefunc();
-
-         if( exists $typemap{$moduletype} ) {
-            carp "Already found module '$typemap{$moduletype}' for type '$moduletype'; not adding '$module' as well";
-            next;
-         }
-
-         $typemap{$moduletype} = $module;
-      }
-
-      $self->{typemap} = \%typemap;
+      $self->{typefunc} = delete $args{typefunc};
    }
    else {
       croak "Expected a 'filter', 'typefunc' or 'typevar' argument";
    }
 
-   $self->{filter} = $filter;
+   $self->rescan;
 
    return $self;
 }
@@ -263,6 +228,65 @@ sub construct
    return $class->new( @constructorargs ) if defined $class;
 
    croak "Unable to find a suitable class";
+}
+
+=head2 $finder->rescan()
+
+Perform another search for plugin modules. This method is useful whenever new
+modules may be present since the object was first constructed.
+
+=cut
+
+sub rescan
+{
+   my $self = shift;
+
+   my $finder = $self->{finder};
+
+   @{ $self->{modules} } = $finder->plugins;
+
+   if( exists $self->{typevar} ) {
+      my $typevar = $self->{typevar};
+      my %typemap;
+
+      foreach my $module ( $self->modules ) {
+         no strict qw( refs );
+
+         next unless defined ${$module."::".$typevar};
+         my $moduletype = ${$module."::".$typevar};
+
+         if( exists $typemap{$moduletype} ) {
+            carp "Already found module '$typemap{$moduletype}' for type '$moduletype'; not adding '$module' as well";
+            next;
+         }
+
+         $typemap{$moduletype} = $module;
+      }
+
+      $self->{typemap} = \%typemap;
+   }
+   elsif( exists $self->{typefunc} ) {
+      my $typefunc = $self->{typefunc};
+      my %typemap;
+
+      foreach my $module ( $self->modules ) {
+         no strict qw( refs );
+
+         next unless $module->can( $typefunc );
+         my $moduletype = $module->$typefunc();
+
+         if( exists $typemap{$moduletype} ) {
+            carp "Already found module '$typemap{$moduletype}' for type '$moduletype'; not adding '$module' as well";
+            next;
+         }
+
+         $typemap{$moduletype} = $module;
+      }
+
+      $self->{typemap} = \%typemap;
+   }
+
+   return; # Avoid implicit return-of-last-expression
 }
 
 # Keep perl happy; keep Britain tidy

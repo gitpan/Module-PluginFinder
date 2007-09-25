@@ -5,6 +5,7 @@ WriteMakefile
           'NAME' => 'Module::PluginFinder',
           'VERSION_FROM' => 'lib/Module/PluginFinder.pm',
           'PREREQ_PM' => {
+                           'File::Spec' => '0',
                            'Module::Pluggable::Object' => '0',
                            'Test::Exception' => '0',
                            'Test::More' => '0',

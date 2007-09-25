@@ -11,6 +11,7 @@ my $build = Module::Build->new
                  'Module::Pluggable::Object' => 0,
                },
    build_requires => {
+                 'File::Spec' => 0,
                  'Test::More' => 0,
                  'Test::Exception' => 0,
                  'Test::Warn' => 0,
