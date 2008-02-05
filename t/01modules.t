@@ -19,5 +19,5 @@ ok( defined $f, 'defined $f' );
 is( ref $f, "Module::PluginFinder", 'ref $f Module::PluginFinder' );
 
 is_deeply( [ sort $f->modules ],
-           [qw( t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
+           [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
            '$f->modules' );

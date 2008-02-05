@@ -1,13 +1,13 @@
 #  You may distribute under the terms of either the GNU General Public License
 #  or the Artistic License (the same terms as Perl itself)
 #
-#  (C) Paul Evans, 2007 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2007,2008 -- leonerd@leonerd.org.uk
 
 package Module::PluginFinder;
 
 use strict;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Carp;
 use Module::Pluggable::Object;
@@ -102,6 +102,8 @@ The name of a package method to call to return the type name. The method will
 be called in scalar context with no arguments; as
 
  $type = $module->$typefunc();
+
+If it returns C<undef> or throws an exception, then the module will be ignored
 
 =back
 
@@ -273,7 +275,8 @@ sub rescan
          no strict qw( refs );
 
          next unless $module->can( $typefunc );
-         my $moduletype = $module->$typefunc();
+         my $moduletype = eval { $module->$typefunc() };
+         next unless defined $moduletype;
 
          if( exists $typemap{$moduletype} ) {
             carp "Already found module '$typemap{$moduletype}' for type '$moduletype'; not adding '$module' as well";

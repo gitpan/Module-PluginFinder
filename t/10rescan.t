@@ -24,7 +24,7 @@ my $f = Module::PluginFinder->new(
 );
 
 is_deeply( [ sort $f->modules ],
-           [qw( t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
+           [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
            '$f->modules' );
 
 my $module = File::Spec->catfile( qw( t lib Purple.pm ) );
@@ -43,7 +43,7 @@ EOF
 } or do { my $reason = "$@"; chomp $reason; skip $reason, 6 };
 
 is_deeply( [ sort $f->modules ],
-           [qw( t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
+           [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
            '$f->modules after write file' );
 
 is( $f->find_module( "triangle" ),
@@ -53,7 +53,7 @@ is( $f->find_module( "triangle" ),
 $f->rescan;
 
 is_deeply( [ sort $f->modules ],
-           [qw( t::lib::Blue t::lib::Green t::lib::Purple t::lib::Red t::lib::Yellow )],
+           [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Purple t::lib::Red t::lib::Yellow )],
            '$f->modules after rescan' );
 
 is( $f->find_module( "triangle" ),
@@ -65,7 +65,7 @@ unlink $module;
 $f->rescan;
 
 is_deeply( [ sort $f->modules ],
-           [qw( t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
+           [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],
            '$f->modules after unlink' );
 
 is( $f->find_module( "triangle" ),
