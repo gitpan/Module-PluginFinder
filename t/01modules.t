@@ -16,7 +16,7 @@ my $f = Module::PluginFinder->new(
 );
 
 ok( defined $f, 'defined $f' );
-is( ref $f, "Module::PluginFinder", 'ref $f Module::PluginFinder' );
+isa_ok( $f, "Module::PluginFinder", '$f isa Module::PluginFinder' );
 
 is_deeply( [ sort $f->modules ],
            [qw( t::lib::Black t::lib::Blue t::lib::Green t::lib::Red t::lib::Yellow )],

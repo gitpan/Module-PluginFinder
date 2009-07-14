@@ -1,16 +1,18 @@
 #  You may distribute under the terms of either the GNU General Public License
 #  or the Artistic License (the same terms as Perl itself)
 #
-#  (C) Paul Evans, 2007,2008 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2007-2009 -- leonerd@leonerd.org.uk
 
 package Module::PluginFinder;
 
 use strict;
-
-our $VERSION = '0.03';
+use warnings;
 
 use Carp;
+
 use Module::Pluggable::Object;
+
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -392,4 +394,4 @@ plugins
 
 =head1 AUTHOR
 
-Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>
+Paul Evans <leonerd@leonerd.org.uk>

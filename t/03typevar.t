@@ -24,7 +24,7 @@ is( $f->find_module( "pentagon" ), undef, '$f->find_module( "pentagon" )' );
 my $colour = $f->construct( "circle", 10 );
 
 ok( defined $colour, 'defined $colour' );
-is( ref $colour, "t::lib::Red", 'ref $colour t::lib::Red' );
+isa_ok( $colour, "t::lib::Red", '$colour isa t::lib::Red' );
 
 is_deeply( $colour, [ 10 ], 'forwarded constructor args for $colour' );
 

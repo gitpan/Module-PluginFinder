@@ -38,6 +38,6 @@ is( $f->find_module( qr/::Missing$/ ), undef, '$f->find_module( qr/::Missing$/ )
 my $colour = $f->construct( qr/::Red$/, 10 );
 
 ok( defined $colour, 'defined $colour' );
-is( ref $colour, "t::lib::Red", 'ref $colour t::lib::Red' );
+isa_ok( $colour, "t::lib::Red", '$colour isa t::lib::Red' );
 
 is_deeply( $colour, [ 10 ], 'forwarded constructor args for $colour' );
